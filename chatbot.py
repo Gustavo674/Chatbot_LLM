@@ -7,7 +7,7 @@ from langchain.chat_models import ChatOpenAI
 import gradio as gr
 
 # Configure sua API Key da OpenAI
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "SUA-CHAVE"
 
 # Substitua com o caminho do PDF
 pdf_path = "Engineering-workshop-health-and-safety-guidelines-catalog.pdf"
