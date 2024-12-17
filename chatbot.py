@@ -1,10 +1,13 @@
+import os
 from langchain_community.document_loaders import PyPDFLoader
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
-from langchain.llms import HuggingFacePipeline
-from transformers import pipeline
+from langchain.chat_models import ChatOpenAI
 import gradio as gr
+
+# Configure sua API Key da OpenAI
+os.environ["OPENAI_API_KEY"] = "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"
 
 # Substitua com o caminho do PDF
 pdf_path = "Engineering-workshop-health-and-safety-guidelines-catalog.pdf"
@@ -15,12 +18,11 @@ documents = pdf_loader.load()
 document_text = [doc.page_content for doc in documents]
 
 # Configurar vetores com FAISS
-embedding_model = OpenAIEmbeddings()  # Configure sua API key para OpenAI
+embedding_model = OpenAIEmbeddings()  # API key já configurada acima
 vector_store = FAISS.from_texts(document_text, embedding_model)
 
-# Configurar o modelo de linguagem (T5)
-llm_pipeline = pipeline("text2text-generation", model="t5-small")
-llm = HuggingFacePipeline(pipeline=llm_pipeline)
+# Configurar o modelo de linguagem OpenAI
+llm = ChatOpenAI(model="gpt-3.5-turbo")  # Use "text-davinci-003" se preferir o modelo completivo
 
 # Configurar a pipeline de QA com RAG
 qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=vector_store.as_retriever())
